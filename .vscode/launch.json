@@ -18,7 +18,8 @@
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "console": "internalConsole"
+            "console": "internalConsole",
+            "preLaunchTask": "build"
         },
         {
             "name": "Run Game",

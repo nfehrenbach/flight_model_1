@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=4 uid="uid://c654ttehl5e6g"]
+[gd_scene load_steps=64 format=4 uid="uid://c654ttehl5e6g"]
 
 [ext_resource type="Script" uid="uid://babxw5ih3acon" path="res://scripts/F14.cs" id="2_r0uqx"]
 [ext_resource type="Material" uid="uid://k6mdnmca4wvo" path="res://mats/canopy.tres" id="3_be33t"]
@@ -620,6 +620,10 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_45ftj")
 
+[sub_resource type="SphereMesh" id="SphereMesh_281ri"]
+radius = 0.05
+height = 0.1
+
 [node name="F14" type="CharacterBody3D"]
 motion_mode = 1
 script = ExtResource("2_r0uqx")
@@ -698,11 +702,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6945535, -0.044437498, 3.34
 mesh = SubResource("ArrayMesh_s4xgh")
 skeleton = NodePath("")
 
-[node name="FlightSurface" type="Node3D" parent="body/hinge_wing_l/wing_l"]
-transform = Transform3D(0, -4.371139e-08, 1, 0, 1, 4.371139e-08, -1, 0, 0, 0.30233908, 0.20405835, 0.38116932)
-script = ExtResource("4_281ri")
-metadata/_custom_type_script = "uid://bnihbi6wopfm7"
-
 [node name="hinge_wing_l_001" type="Node3D" parent="body"]
 transform = Transform3D(0, 0, -1, 1, 0, 0, 0, -1, 0, 2.6134799, 2.7686908, -0.10578197)
 
@@ -762,3 +761,12 @@ transform = Transform3D(0.88764876, 0.4605211, 0, -0.4605211, 0.88764876, 0, 0, 
 transform = Transform3D(0.88764876, -0.46052107, 0, 0.46052107, 0.88764876, 0, 0, 0, 1, 0.2836259, 0.14714815, 0)
 mesh = SubResource("ArrayMesh_hl05j")
 skeleton = NodePath("")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.31, 0, 4.77)
+mesh = SubResource("SphereMesh_281ri")
+
+[node name="FlightSurface" type="Node3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.009288311, 0, -0.0044169426)
+script = ExtResource("4_281ri")
+metadata/_custom_type_script = "uid://bnihbi6wopfm7"
