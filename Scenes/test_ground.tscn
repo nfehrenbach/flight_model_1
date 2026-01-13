@@ -1,0 +1,57 @@
+[gd_scene load_steps=10 format=3 uid="uid://gygny8ldjine"]
+
+[ext_resource type="Script" uid="uid://updmgnrwypew" path="res://scripts/test_ground.gd" id="1_5yb17"]
+[ext_resource type="PackedScene" uid="uid://cfkdloarr68" path="res://Scenes/player.tscn" id="2_6h2m2"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_p5yii"]
+size = Vector2(1000, 1000)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_62nyy"]
+albedo_color = Color(0.313754, 0.1922, 0.00356389, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6h2m2"]
+size = Vector3(1001.4496, 0.3284912, 1001.45026)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dk151"]
+sky_top_color = Color(0, 0.449146, 0.817904, 1)
+sky_horizon_color = Color(0.351167, 0.69222, 0.916574, 1)
+ground_bottom_color = Color(0.568424, 0.215662, 0.543624, 1)
+
+[sub_resource type="Sky" id="Sky_wg2yb"]
+sky_material = SubResource("ProceduralSkyMaterial_dk151")
+
+[sub_resource type="Environment" id="Environment_odjvs"]
+background_mode = 2
+sky = SubResource("Sky_wg2yb")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6h2m2"]
+
+[node name="test_ground" type="Node3D"]
+script = ExtResource("1_5yb17")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(0.999857, 0.0156273, -0.00644907, -0.015557, 0.999821, 0.0108147, 0.00661688, -0.0107128, 0.999921, 0, -1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(1, 9.968062e-10, 4.656613e-10, 3.2014214e-10, 1, -9.313226e-10, -4.656613e-10, 0, 1, 0, 0, 0)
+mesh = SubResource("PlaneMesh_p5yii")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_62nyy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(0.9999901, 1.1083248e-06, 5.001202e-07, 6.564951e-07, 1.0000002, -5.764887e-07, -5.8533624e-07, 6.9569796e-07, 1, 0.62026554, -0.05649817, -0.15369792)
+shape = SubResource("BoxShape3D_6h2m2")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_odjvs")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.460576, -0.714608, 0.526502, -0.887416, -0.383435, 0.255872, 0.0190315, -0.585075, -0.810756, 53.1797, 17.5179, -9.37396)
+shadow_enabled = true
+
+[node name="ref_shape" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0.6, 43)
+mesh = SubResource("CylinderMesh_6h2m2")
+
+[node name="Player" parent="." instance=ExtResource("2_6h2m2")]
+transform = Transform3D(0.79210854, 0, 0.6103803, 0, 1, 0, -0.6103803, 0, 0.79210854, 0, 2.6543102, 105.18205)

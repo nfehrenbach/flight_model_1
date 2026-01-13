@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bi6rqkwjms4el"]
+
+[ext_resource type="Script" uid="uid://bdsfewwsx5ssu" path="res://scripts/Plane.cs" id="1_6ebbn"]
+
+[node name="Plane" type="CharacterBody3D"]
+script = ExtResource("1_6ebbn")

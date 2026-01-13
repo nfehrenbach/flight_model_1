@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfkdloarr68"]
+
+[ext_resource type="Script" uid="uid://bicdullp5q0kp" path="res://scripts/Player.cs" id="1_6t5aa"]
+[ext_resource type="PackedScene" uid="uid://c654ttehl5e6g" path="res://Scenes/F14.tscn" id="2_vgqql"]
+[ext_resource type="PackedScene" uid="uid://bculjpy8xxhmc" path="res://Scenes/UI.tscn" id="3_fkybt"]
+
+[node name="Player" type="Node3D" node_paths=PackedStringArray("Plane")]
+script = ExtResource("1_6t5aa")
+Plane = NodePath("Plane")
+
+[node name="Plane" parent="." instance=ExtResource("2_vgqql")]
+
+[node name="springarm" type="SpringArm3D" parent="Plane"]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 5, 20)
+spring_length = 20.0
+
+[node name="camera" type="Camera3D" parent="Plane/springarm"]
+current = true
+
+[node name="UI" parent="." instance=ExtResource("3_fkybt")]
+
+[connection signal="ElevationChanged" from="Plane" to="UI" method="OnElevationChanged"]
+[connection signal="ThrottleChanged" from="Plane" to="UI" method="OnThrottleChanged"]
+[connection signal="VelocityChanged" from="Plane" to="UI" method="OnVelocityChanged"]
