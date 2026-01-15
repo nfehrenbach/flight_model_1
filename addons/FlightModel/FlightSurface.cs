@@ -29,10 +29,32 @@ public partial class FlightSurface : Node3D
             UpdateGizmos();
         }
     }
-    private float _width = 1.0f;
+    private float _width = 2.0f;
 
-    [Export] public float LiftCoefficient { get; set; } = 1.0f;
-    [Export] public float DragCoefficient { get; set; } = 0.2f;
+    [Export]
+    public float LiftCoefficient
+    {
+        get => _liftCoefficient;
+        set
+        {
+            _liftCoefficient = value;
+            UpdateGizmos();
+        }
+    }
+    private float _liftCoefficient = 1.0f;
+
+    [Export]
+    public float DragCoefficient
+    {
+        get => _dragCoefficient;
+        set
+        {
+            _dragCoefficient = value;
+            UpdateGizmos();
+        }
+    }
+    private float _dragCoefficient = 0.2f;
+
     [Export] public Vector3 LocalNormal { get; set; } = Vector3.Up;
 
     public float Area => Width * Length;

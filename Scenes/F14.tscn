@@ -769,4 +769,5 @@ mesh = SubResource("SphereMesh_281ri")
 [node name="FlightSurface" type="Node3D" parent="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.009288311, 0, -0.0044169426)
 script = ExtResource("4_281ri")
+Width = 2.0
 metadata/_custom_type_script = "uid://bnihbi6wopfm7"
