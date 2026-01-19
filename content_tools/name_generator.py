@@ -13,6 +13,7 @@ class Arguments:
         self.bar: bool = bar
 
 
+#FIXME: NEON-17 define arguments with help
 def parseargs() -> Arguments:
     parser = argparse.ArgumentParser()
     parser.add_argument("--num", "-n", type=int, default=1)
@@ -138,7 +139,7 @@ def generate_bar() -> str:
 
 
 def main() -> None:
-    # args = parseargs()
+    # FIXME: NEON-17 args = parseargs()
     if True: # args.bar:
         print(generate_bar())
 
