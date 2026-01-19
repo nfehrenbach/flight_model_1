@@ -14,31 +14,24 @@ public abstract partial class Plane : CharacterBody3D
 	[Export]
 	public float ThrottlePercent { get; set; } = 0.0f;
 
-	[ExportCategory("Plane Stats")]
 	[Export]
 	public float ThrottleMultiplier { get; set; } = 0.01f;
 
-	[ExportCategory("Plane Stats")]
 	[Export]
 	public float ThrottleSensitivity { get; set; } = 0.5f;
 
-	[ExportCategory("Plane Stats")]
 	[Export]
 	public float YawSensitivity { get; set; } = 1.0f;
 
-	[ExportCategory("Plane Stats")]
 	[Export]
 	public float RollSensitivity { get; set; } = 1.0f;
 
-	[ExportCategory("Plane Stats")]
 	[Export]
 	public float PitchSensitivity { get; set; } = 1.0f;
 
-	[ExportCategory("Plane Stats")]
 	[Export]
 	public float Thrust { get; set; } = 40f;
 
-	[ExportCategory("Plane Stats")]
 	[Export]
 	public float MaxSpeed { get; set; } = 800f;
 	#endregion Exports
