@@ -1,9 +1,9 @@
 using Godot;
 using System;
-using FlightModel1.Models;
+using FlightModel1.ControlState;
 using System.Collections.Generic;
 
-namespace FlightModel1;
+namespace FlightModel1.Scene.Craft;
 
 #nullable enable
 

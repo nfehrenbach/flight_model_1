@@ -1,8 +1,7 @@
 using Godot;
 using System;
-using FlightModel1.Models;
 
-namespace FlightModel1;
+namespace FlightModel1.Scene.Craft;
 
 #nullable enable
 

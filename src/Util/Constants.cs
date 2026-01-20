@@ -14,4 +14,10 @@ public static class Constants
         public static string ThrottleUp = "Throttle_Up";
         public static string ThrottleDown = "Throttle_Dn";
     }
+
+    public static class ButtonNames
+    {
+        public static string LayerL = "Layer-L";
+        public static string LayerR = "Layer-R";
+    }
 }

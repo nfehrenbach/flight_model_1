@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace FlightModel1;
+namespace FlightModel1.Scene.Craft;
 
 public partial class F414 : Plane
 {
