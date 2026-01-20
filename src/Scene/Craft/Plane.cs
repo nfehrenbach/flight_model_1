@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using FlightModel1.ControlState;
+using FlightModel1.ControlState.Craft;
 using System.Collections.Generic;
 
 namespace FlightModel1.Scene.Craft;
@@ -38,6 +38,8 @@ public abstract partial class Plane : CharacterBody3D
 
 	protected Inputs? inputs;
 	protected IEnumerable<Node3D> LiftSurfaces { get; set; } = Array.Empty<Node3D>();
+	protected float LateralThrustPercent { get; set; } = 0f;
+	protected float VerticalThrustPercent { get; set; } = 0f;
 
 	public void SetInputValues(Inputs inputValues)
 	{
@@ -72,6 +74,12 @@ public abstract partial class Plane : CharacterBody3D
 			EmitSignal(SignalName.ThrottleChanged, ThrottlePercent);
 		}
 
+		if (inputs != null)
+		{
+			LateralThrustPercent = inputs.StrafeLRAxis;
+			VerticalThrustPercent = inputs.StrafeUDAxis;
+		}
+
 		SetDrag();
 		SetVelocity();
 	}
@@ -80,6 +88,10 @@ public abstract partial class Plane : CharacterBody3D
 	{
 		Vector3 forward = -GlobalBasis.Z;
 		Velocity += forward * Thrust * ThrottlePercent * ThrottleMultiplier;
+		Vector3 right = GlobalBasis.X;
+		Velocity += right * Thrust * ThrottleMultiplier * (LateralThrustPercent * 100.0f);
+		Vector3 up = GlobalBasis.Y;
+		Velocity += up * Thrust * ThrottleMultiplier * (VerticalThrustPercent * 100.0f);
 		Velocity = Velocity.LimitLength(MaxSpeed);
 	}
 

@@ -27,6 +27,10 @@ public partial class FlightSurfaceGizmo : EditorNode3DGizmoPlugin
     private const string HandleNodeLiftPointMaterial = "HandleNodeLiftPointMaterial";
     private const string NodeVolumeMaterial = "NodeVolumeMaterial";
 
+    public FlightSurfaceGizmo() : base()
+    {
+    }
+
     public FlightSurfaceGizmo(EditorUndoRedoManager undoRedo)
     {
         CreateMaterial(NodeMainMaterial, new Color(1, 0, 0));

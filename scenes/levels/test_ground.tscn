@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://gygny8ldjine"]
 
-[ext_resource type="Script" uid="uid://updmgnrwypew" path="res://scripts/test_ground.gd" id="1_5yb17"]
-[ext_resource type="PackedScene" uid="uid://cfkdloarr68" path="res://Scenes/player.tscn" id="2_6h2m2"]
+[ext_resource type="Script" uid="uid://updmgnrwypew" path="res://src/Scene/Levels/test_ground.gd" id="1_5yb17"]
+[ext_resource type="PackedScene" uid="uid://cfkdloarr68" path="res://scenes/player/player.tscn" id="2_6h2m2"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_p5yii"]
 size = Vector2(1000, 1000)
@@ -41,6 +41,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_62nyy")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(0.9999901, 1.1083248e-06, 5.001202e-07, 6.564951e-07, 1.0000002, -5.764887e-07, -5.8533624e-07, 6.9569796e-07, 1, 0.62026554, -0.05649817, -0.15369792)
 shape = SubResource("BoxShape3D_6h2m2")
+script = ExtResource("1_5yb17")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_odjvs")

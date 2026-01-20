@@ -1,6 +1,4 @@
 using Godot;
-using System.Linq;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using FlightModel1.Enum;
@@ -18,14 +16,11 @@ public class ActionHistory
         stopwatch = Stopwatch.StartNew();
     }
 
-    public void AddActions(Inputs inputs)
+    public void RecordAction(string inputName, ActionState state, float? value = 0f)
     {
-        long time = stopwatch.ElapsedMilliseconds;
-        foreach (ActionRecord action in inputs.GetAllInputs())
-        {
-            action.SetActionTime(time);
-            Actions.TryAdd(action.InputName, action);
-        }
+        long currentTime = stopwatch.ElapsedMilliseconds;
+        var record = new ActionRecord(inputName, state, currentTime, value);
+        Actions.AddOrUpdate(inputName, record, (key, oldValue) => record);
     }
 
     public bool ActionActiveAndWithin(string inputName, long deltaMs)
@@ -33,7 +28,7 @@ public class ActionHistory
         if (Actions.TryGetValue(inputName, out ActionRecord? record))
         {
             long currentTime = stopwatch.ElapsedMilliseconds;
-            return (record.LastAction == ActionState.Entered || record.LastAction == ActionState.Held) &&
+            return (record.State == ActionState.Entered || record.State == ActionState.Held) &&
                    (currentTime - record.LastActionTimeMs <= deltaMs);
         }
 
@@ -45,7 +40,7 @@ public class ActionHistory
         if (Actions.TryGetValue(inputName, out ActionRecord? record))
         {
             long currentTime = stopwatch.ElapsedMilliseconds;
-            return record.LastAction == ActionState.Released &&
+            return record.State == ActionState.Released &&
                    (currentTime - record.LastActionTimeMs <= deltaMs);
         }
 

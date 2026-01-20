@@ -1,8 +1,10 @@
 using Godot;
 using System;
 using FlightModel1.ControlState;
+using FlightModel1.ControlState.Craft;
 using FlightModel1.Utils;
 using FlightModel1.Scene.Craft;
+using System.Diagnostics;
 
 namespace FlightModel1.Scene.Player;
 
@@ -12,18 +14,16 @@ public partial class Player : Node3D
 	[Export]
 	public Craft.Plane Plane;
 
-	private bool _idle = true;
-	private float pitchInput = 0;
-	private float rollInput = 0;
-	private float yawInput = 0;
-	private float throttleInput = 0;
+	private bool IsUsingLAndRStrafe = false;
 	private ActionHistory actionHistory = new();
+	Stopwatch stopwatch;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		if (!Util.IsAlive(Plane))
 			GD.PrintErr("Player: Plane is NOT assigned!");
+		stopwatch = Stopwatch.StartNew();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -34,24 +34,50 @@ public partial class Player : Node3D
 
 	private Inputs ReadInput()
 	{
-		pitchInput = Input.GetAxis(Constants.AxisNames.PitchDown, Constants.AxisNames.PitchUp);
-		rollInput = Input.GetAxis(Constants.AxisNames.RollLeft, Constants.AxisNames.RollRight);
-		yawInput = -1f * Input.GetAxis(Constants.AxisNames.YawLeft, Constants.AxisNames.YawRight);
+		float ax1 = Input.GetAxis(Constants.AxisNames.Axis1Down, Constants.AxisNames.Axis1Up);
+		float ax2 = Input.GetAxis(Constants.AxisNames.Axis2Down, Constants.AxisNames.Axis2Up);
+		float ax3 = Input.GetAxis(Constants.AxisNames.Axis3Down, Constants.AxisNames.Axis3Up);
+		float ax4 = Input.GetAxis(Constants.AxisNames.Axis4Down, Constants.AxisNames.Axis4Up);
+		float ax5 = Input.GetAxis(Constants.AxisNames.Axis5Down, Constants.AxisNames.Axis5Up);
+		float ax6 = (Input.IsActionPressed(Constants.AxisNames.Axis6Up) ? 1f : 0f)
+			- (Input.IsActionPressed(Constants.AxisNames.Axis6Down) ? 1f : 0f);
 
-		throttleInput = (Input.IsActionPressed(Constants.AxisNames.ThrottleUp) ? 1f : 0f)
-			- (Input.IsActionPressed(Constants.AxisNames.ThrottleDown) ? 1f : 0f);
+		if (CheckLayerLAndRPressed())
+		{
+			IsUsingLAndRStrafe = !IsUsingLAndRStrafe;
+			GD.Print($"Player: Toggled L+R strafe mode to {IsUsingLAndRStrafe}");
+		}
 
-		return new Inputs(
-			rollInput,
-			pitchInput,
-			yawInput,
-			throttleInput
-		);
+		Inputs craftInput;
+		if (!IsUsingLAndRStrafe)
+		{
+			craftInput = new Inputs(
+				RollAxis: ax2,
+				PitchAxis: -ax1,
+				YawAxis: -ax3,
+				ThrottleAxis: ax6);
+		}
+		else
+		{
+			craftInput = new Inputs(
+				RollAxis: ax6,
+				PitchAxis: -ax4,
+				YawAxis: -ax5,
+				ThrottleAxis: ax3,
+				StrafeLRAxis: ax2,
+				StrafeUDAxis: ax1);
+		}
+
+		if (stopwatch.ElapsedMilliseconds > 1000)
+		{
+			GD.Print($": {craftInput}");
+			stopwatch.Restart();
+		}
+
+		return craftInput;
 	}
 
 	private bool CheckLayerLAndRPressed()
-	{
-		// TODO: NEON-10
-		return false;
-	}
+		=> Input.IsActionJustPressed(Constants.ButtonNames.LayerR)
+			&& Input.IsActionPressed(Constants.ButtonNames.LayerL);
 }
