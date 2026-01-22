@@ -1,4 +1,7 @@
-namespace FlightModel1.Models;
+using System.Collections.Generic;
+using FlightModel1.Enum;
+
+namespace FlightModel1.ControlState.Craft;
 
 #nullable enable
 
@@ -17,5 +20,11 @@ public record Inputs(
     float YawAxis = 0f,
     float ThrottleAxis = 0f,
     float StrafeLRAxis = 0f,
-    float StrafeUDAxis = 0f
-);
+    float StrafeUDAxis = 0f,
+    bool GearDown = false)
+{
+    public override string ToString()
+        => $"Roll={RollAxis}, Pitch={PitchAxis}, YawAxis={YawAxis}, Throttle={ThrottleAxis}, StrafeLR={StrafeLRAxis}, StrafeUD={StrafeUDAxis}";
+
+}
+// TODO: NEON-20 axis for head look?
