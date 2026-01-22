@@ -78,6 +78,6 @@ public partial class Player : Node3D
 	}
 
 	private bool CheckLayerLAndRPressed()
-		=> Input.IsActionJustPressed(Constants.ButtonNames.LayerR)
-			&& Input.IsActionPressed(Constants.ButtonNames.LayerL);
+		=> Input.IsActionPressed(Constants.ButtonNames.LayerL) // LayerL is a layer button
+			&& Input.IsActionJustPressed(Constants.ButtonNames.LayerR); // LayerR is a active button
 }
