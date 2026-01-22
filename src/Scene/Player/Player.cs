@@ -67,8 +67,8 @@ public partial class Player : Node3D
 				StrafeLRAxis: ax2,
 				StrafeUDAxis: ax1);
 		}
-        // TODO: NEON-24 Should be a call to utility once implemented
-		if (stopwatch.ElapsedMilliseconds > 1000)
+		// TODO: NEON-24 Should be a call to utility once implemented
+		if (loggingStopwatch.ElapsedMilliseconds > 1000)
 		{
 			GD.Print($": {craftInput}");
 			loggingStopwatch.Restart();
