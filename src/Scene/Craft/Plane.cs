@@ -72,7 +72,7 @@ public abstract partial class Plane : CharacterBody3D
 			ThrottlePercent += inputs.ThrottleAxis * ThrottleSensitivity;
 			ThrottlePercent = Math.Clamp(ThrottlePercent, -100f, 100f);
 			EmitSignal(SignalName.ThrottleChanged, ThrottlePercent);
-		}
+		} // TODO: NEON-21 should be placed into helper function and unified with other thrust axes
 
 		if (inputs != null)
 		{

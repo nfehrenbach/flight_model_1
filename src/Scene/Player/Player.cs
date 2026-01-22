@@ -16,14 +16,14 @@ public partial class Player : Node3D
 
 	private bool IsUsingLAndRStrafe = false;
 	private ActionHistory actionHistory = new();
-	Stopwatch stopwatch;
+	Stopwatch loggingStopwatch;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		if (!Util.IsAlive(Plane))
 			GD.PrintErr("Player: Plane is NOT assigned!");
-		stopwatch = Stopwatch.StartNew();
+		loggingStopwatch = Stopwatch.StartNew();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -67,11 +67,11 @@ public partial class Player : Node3D
 				StrafeLRAxis: ax2,
 				StrafeUDAxis: ax1);
 		}
-
+        // TODO: NEON-24 Should be a call to utility once implemented
 		if (stopwatch.ElapsedMilliseconds > 1000)
 		{
 			GD.Print($": {craftInput}");
-			stopwatch.Restart();
+			loggingStopwatch.Restart();
 		}
 
 		return craftInput;

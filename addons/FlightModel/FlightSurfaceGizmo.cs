@@ -27,6 +27,7 @@ public partial class FlightSurfaceGizmo : EditorNode3DGizmoPlugin
     private const string HandleNodeLiftPointMaterial = "HandleNodeLiftPointMaterial";
     private const string NodeVolumeMaterial = "NodeVolumeMaterial";
 
+    // Empty constructor needed for godot compilation
     public FlightSurfaceGizmo() : base()
     {
     }
