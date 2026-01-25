@@ -34,13 +34,13 @@ public partial class Player : Node3D
 
 	private Inputs ReadInput()
 	{
-		float ax1 = Input.GetAxis(Constants.AxisNames.Axis1Down, Constants.AxisNames.Axis1Up);
-		float ax2 = Input.GetAxis(Constants.AxisNames.Axis2Down, Constants.AxisNames.Axis2Up);
-		float ax3 = Input.GetAxis(Constants.AxisNames.Axis3Down, Constants.AxisNames.Axis3Up);
-		float ax4 = Input.GetAxis(Constants.AxisNames.Axis4Down, Constants.AxisNames.Axis4Up);
-		float ax5 = Input.GetAxis(Constants.AxisNames.Axis5Down, Constants.AxisNames.Axis5Up);
-		float ax6 = (Input.IsActionPressed(Constants.AxisNames.Axis6Up) ? 1f : 0f)
-			- (Input.IsActionPressed(Constants.AxisNames.Axis6Down) ? 1f : 0f);
+		float ax1 = Input.GetAxis(Consts.AxisNames.Axis1Down, Consts.AxisNames.Axis1Up);
+		float ax2 = Input.GetAxis(Consts.AxisNames.Axis2Down, Consts.AxisNames.Axis2Up);
+		float ax3 = Input.GetAxis(Consts.AxisNames.Axis3Down, Consts.AxisNames.Axis3Up);
+		float ax4 = Input.GetAxis(Consts.AxisNames.Axis4Down, Consts.AxisNames.Axis4Up);
+		float ax5 = Input.GetAxis(Consts.AxisNames.Axis5Down, Consts.AxisNames.Axis5Up);
+		float ax6 = (Input.IsActionPressed(Consts.AxisNames.Axis6Up) ? 1f : 0f)
+			- (Input.IsActionPressed(Consts.AxisNames.Axis6Down) ? 1f : 0f);
 
 		if (CheckLayerLAndRPressed())
 		{
@@ -78,6 +78,6 @@ public partial class Player : Node3D
 	}
 
 	private bool CheckLayerLAndRPressed()
-		=> Input.IsActionPressed(Constants.ButtonNames.LayerL) // LayerL is a layer button
-			&& Input.IsActionJustPressed(Constants.ButtonNames.LayerR); // LayerR is a active button
+		=> Input.IsActionPressed(Consts.ButtonNames.LayerL) // LayerL is a layer button
+			&& Input.IsActionJustPressed(Consts.ButtonNames.LayerR); // LayerR is a active button
 }

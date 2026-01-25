@@ -34,16 +34,29 @@ public abstract partial class Plane : CharacterBody3D
 
 	[Export]
 	public float MaxSpeed { get; set; } = 800f;
+
+	[ExportCategory("Surface Limits")]
+	[Export]
+	public float MaxRollStabilatorAngle { get; set; } = 15f;
+
+	[Export]
+	public float MaxPitchStabilatorAngle { get; set; } = 15f;
+
+	[Export]
+	public float MaxRudderAngle { get; set; } = 30f;
+
+	[Export]
+	public float MaxPitchSpoilerAngle { get; set; } = 25f;
 	#endregion Exports
 
-	protected Inputs? inputs;
+	protected Inputs? CtrlInputs { get; set; } = null;
 	protected IEnumerable<Node3D> LiftSurfaces { get; set; } = Array.Empty<Node3D>();
 	protected float LateralThrustPercent { get; set; } = 0f;
 	protected float VerticalThrustPercent { get; set; } = 0f;
 
 	public void SetInputValues(Inputs inputValues)
 	{
-		inputs = inputValues;
+		CtrlInputs = inputValues;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -60,24 +73,24 @@ public abstract partial class Plane : CharacterBody3D
 
 	private void UpdateFlightModel(double delta)
 	{
-		if (inputs != null)
+		if (CtrlInputs != null)
 		{
-			RotateObjectLocal(Vector3.Right, (float)(PitchSensitivity * inputs.PitchAxis * delta));
-			RotateObjectLocal(Vector3.Forward, (float)(RollSensitivity * inputs.RollAxis * delta));
-			RotateObjectLocal(Vector3.Up, (float)(YawSensitivity * inputs.YawAxis * delta));
+			RotateObjectLocal(Vector3.Right, (float)(PitchSensitivity * CtrlInputs.PitchAxis * delta));
+			RotateObjectLocal(Vector3.Forward, (float)(RollSensitivity * CtrlInputs.RollAxis * delta));
+			RotateObjectLocal(Vector3.Up, (float)(YawSensitivity * CtrlInputs.YawAxis * delta));
 		}
 
-		if (inputs != null && inputs.ThrottleAxis != 0)
+		if (CtrlInputs != null && CtrlInputs.ThrottleAxis != 0)
 		{
-			ThrottlePercent += inputs.ThrottleAxis * ThrottleSensitivity;
+			ThrottlePercent += CtrlInputs.ThrottleAxis * ThrottleSensitivity;
 			ThrottlePercent = Math.Clamp(ThrottlePercent, -100f, 100f);
 			EmitSignal(SignalName.ThrottleChanged, ThrottlePercent);
 		} // TODO: NEON-21 should be placed into helper function and unified with other thrust axes
 
-		if (inputs != null)
+		if (CtrlInputs != null)
 		{
-			LateralThrustPercent = inputs.StrafeLRAxis;
-			VerticalThrustPercent = inputs.StrafeUDAxis;
+			LateralThrustPercent = CtrlInputs.StrafeLRAxis;
+			VerticalThrustPercent = CtrlInputs.StrafeUDAxis;
 		}
 
 		SetDrag();
