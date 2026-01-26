@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using FlightModel1.Enum;
 
-namespace FlightModel1.ControlState;
+namespace FlightModel1.ControlState.UserActions;
 
 #nullable enable
 public class ActionHistory

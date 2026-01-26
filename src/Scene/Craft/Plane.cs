@@ -2,6 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using FlightModel1.ControlState.Craft;
+using FlightModel1.ControlState.Craft.AngleSets;
+using FlightModel1.ControlState.Craft.BasisSets;
+using FlightModel1.ControlState.Craft.NodeSets;
 using FlightModel1.Utils;
 
 namespace FlightModel1.Scene.Craft;

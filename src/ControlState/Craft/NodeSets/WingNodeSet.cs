@@ -1,6 +1,6 @@
 using Godot;
 
-namespace FlightModel1.ControlState.Craft;
+namespace FlightModel1.ControlState.Craft.NodeSets;
 
 #nullable enable
 

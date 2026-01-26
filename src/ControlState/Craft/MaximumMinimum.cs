@@ -1,8 +1,8 @@
 
 namespace FlightModel1.ControlState.Craft;
 
-public class MaximumMinimum
+public class MaximumMinimumDegAngles
 {
-    public float Max { get; set; }
-    public float Min { get; set; }
+    public float Max { get; set; } = 30f;
+    public float Min { get; set; } = 30f;
 }
