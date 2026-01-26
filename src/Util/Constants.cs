@@ -68,28 +68,40 @@ public static class Consts
 
     public static class PlaneGeoAddr
     {
-        public const string rootStr = "fuselage";
-        public const string leftWingStr = $"{rootStr}/receiver_wing_mount_l/socket_wing_mount_l/wing_pivot_mount_l/hinge_wing_l";
-        public const string rightWingStr = $"{rootStr}/receiver_wing_mount_r/socket_wing_mount_r/wing_pivot_mount_r/hinge_wing_r";
-        public const string leftWingSurfStr = $"{leftWingStr}/wing_l";
-        public const string rightWingSurfStr = $"{rightWingStr}/wing_r";
-        public const string leftFlapsStr = $"{leftWingSurfStr}/hinge_flaps_l";
-        public const string rightFlapsStr = $"{rightWingSurfStr}/hinge_flaps_r";
-        public const string leftAileronStr = $"{leftWingSurfStr}/hinge_aileron_l";
-        public const string rightAileronStr = $"{rightWingSurfStr}/hinge_aileron_r";
-        public const string leftInnerSpoilerStr = $"{leftWingSurfStr}/hinge_spoiler_inner_l";
-        public const string rightInnerSpoilerStr = $"{rightWingSurfStr}/hinge_spoiler_inner_r";
-        public const string leftOuterSpoilerStr = $"{leftWingSurfStr}/hinge_spoiler_outer_l";
-        public const string rightOuterSpoilerStr = $"{rightWingSurfStr}/hinge_spoiler_outer_r";
-        public const string leftMiddleSpoilerStr = $"{leftWingSurfStr}/hinge_spoiler_middle_l";
-        public const string rightMiddleSpoilerStr = $"{rightWingSurfStr}/hinge_spoiler_middle_r";
-        public const string leftStabilatorStr = $"{rootStr}/receiver_stabilator_strut_l/socket_stabilator_strut_l/stabilator_strut_l/hinge_stabilator_l";
-        public const string rightStabilatorStr = $"{rootStr}/receiver_stabilator_strut_r/socket_stabilator_strut_r/stabilator_strut_r/hinge_stabilator_r";
-        public const string leftElevatorStr = $"{rootStr}/receiver_elevator_strut_l/socket_elevator_strut_l/elevator_strut_l/hinge_elevator_l";
-        public const string rightElevatorStr = $"{rootStr}/receiver_elevator_strut_r/socket_elevator_strut_r/elevator_strut_r/hinge_elevator_r";
-        public const string leftRudderStr = $"{rootStr}/receiver_vstab_l/socket_vstab_l/vstab_l/hinge_rudder_l";
-        public const string rightRudderStr = $"{rootStr}/receiver_vstab_r/socket_vstab_r/vstab_r/hinge_rudder_r";
-        public const string rudderStr = $"{rootStr}/receiver_vstab/socket_vstab/vstab/hinge_rudder";
+        public const string RootStr = "fuselage";
+        public const string LeftWingStr
+            = $"{RootStr}/receiver_wing_mount_l/socket_wing_mount_l/wing_pivot_mount_l/hinge_wing_l";
+        public const string RightWingStr
+            = $"{RootStr}/receiver_wing_mount_r/socket_wing_mount_r/wing_pivot_mount_r/hinge_wing_r";
+        public const string LeftWingSurfStr = $"{LeftWingStr}/wing_l";
+        public const string RightWingSurfStr = $"{RightWingStr}/wing_r";
+        public const string LeftWingAileronStr = $"{LeftWingStr}/hinge_aileron_l";
+        public const string RightWingAileronStr = $"{RightWingStr}/hinge_aileron_r";
+        public const string LeftFlapsStr = $"{LeftWingSurfStr}/hinge_flaps_l";
+        public const string RightFlapsStr = $"{RightWingSurfStr}/hinge_flaps_r";
+        public const string LeftAileronStr = $"{LeftWingSurfStr}/hinge_aileron_l";
+        public const string RightAileronStr = $"{RightWingSurfStr}/hinge_aileron_r";
+        public const string LeftInnerSpoilerStr = $"{LeftWingSurfStr}/hinge_spoiler_inner_l";
+        public const string RightInnerSpoilerStr = $"{RightWingSurfStr}/hinge_spoiler_inner_r";
+        public const string LeftOuterSpoilerStr = $"{LeftWingSurfStr}/hinge_spoiler_outer_l";
+        public const string RightOuterSpoilerStr = $"{RightWingSurfStr}/hinge_spoiler_outer_r";
+        public const string LeftMiddleSpoilerStr = $"{LeftWingSurfStr}/hinge_spoiler_middle_l";
+        public const string RightMiddleSpoilerStr = $"{RightWingSurfStr}/hinge_spoiler_middle_r";
+        public const string LeftStabilatorStr
+            = $"{RootStr}/receiver_stabilator_strut_l/socket_stabilator_strut_l/stabilator_strut_l/hinge_stabilator_l";
+        public const string RightStabilatorStr
+            = $"{RootStr}/receiver_stabilator_strut_r/socket_stabilator_strut_r/stabilator_strut_r/hinge_stabilator_r";
+        public const string LeftElevatorStr
+            = $"{RootStr}/receiver_elevator_strut_l/socket_elevator_strut_l/elevator_strut_l/hinge_elevator_l";
+        public const string RightElevatorStr
+            = $"{RootStr}/receiver_elevator_strut_r/socket_elevator_strut_r/elevator_strut_r/hinge_elevator_r";
+        public const string LeftRudderStr = $"{RootStr}/receiver_vstab_l/socket_vstab_l/vstab_l/hinge_rudder_l";
+        public const string RightRudderStr = $"{RootStr}/receiver_vstab_r/socket_vstab_r/vstab_r/hinge_rudder_r";
+        public const string RudderStr = $"{RootStr}/receiver_vstab/socket_vstab/vstab/hinge_rudder";
+        public const string ElevatorStr
+            = $"{RootStr}/receiver_elevator_strut/socket_elevator_strut/elevator_strut/hinge_elevator";
+        public const string StabilatorStr
+            = $"{RootStr}/receiver_stabilator_strut/socket_stabilator_strut/stabilator_strut/hinge_stabilator";
     }
 
     public static class ButtonNames

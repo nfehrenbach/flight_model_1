@@ -1,7 +1,8 @@
 using Godot;
 using System;
-using FlightModel1.ControlState.Craft;
 using System.Collections.Generic;
+using FlightModel1.ControlState.Craft;
+using FlightModel1.Utils;
 
 namespace FlightModel1.Scene.Craft;
 
@@ -46,17 +47,127 @@ public abstract partial class Plane : CharacterBody3D
 	public float MaxRudderAngle { get; set; } = 30f;
 
 	[Export]
-	public float MaxPitchSpoilerAngle { get; set; } = 25f;
+	float MaxPitchSpoilerAngle { get; set; } = 25f;
 	#endregion Exports
 
-	protected Inputs? CtrlInputs { get; set; } = null;
+	protected Inputs? ControlInputs { get; set; } = null;
+	protected InputAngles InputAngleValues { get; set; } = new();
 	protected IEnumerable<Node3D> LiftSurfaces { get; set; } = Array.Empty<Node3D>();
 	protected float LateralThrustPercent { get; set; } = 0f;
 	protected float VerticalThrustPercent { get; set; } = 0f;
 
+	#region Model Node References
+	protected InitialBasisSet? InitialBasisSet;
+	protected FlightSurfaceNodeSet? FlightSurfaceNodes;
+	#endregion
+
+	protected Node3D? gRoot = null;
+
+	/// <summary>
+	/// Sets the FSNodes object
+	/// </summary>
+	/// <exception cref="ArgumentNullException"></exception>
+	private void SetFSNodes()
+	{
+		if (gRoot == null)
+			throw new ArgumentNullException(nameof(gRoot), "gRoot is null");
+		FlightSurfaceNodes = new FlightSurfaceNodeSet(
+			LeftWing: new WingNodeSet(
+				Aileron: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftAileronStr),
+				Flaps: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftFlapsStr),
+				InnerSpoiler: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftInnerSpoilerStr),
+				MiddleSpoiler: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftMiddleSpoilerStr),
+				OuterSpoiler: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftOuterSpoilerStr),
+				Pivot: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftWingStr)
+			),
+			RightWing: new WingNodeSet(
+				Aileron: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightAileronStr),
+				Flaps: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightFlapsStr),
+				InnerSpoiler: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightInnerSpoilerStr),
+				MiddleSpoiler: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightMiddleSpoilerStr),
+				OuterSpoiler: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightOuterSpoilerStr),
+				Pivot: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightWingStr)
+			),
+			LeftTail: new TailNodeSet(
+				Elevator: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftElevatorStr),
+				Rudder: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftRudderStr),
+				Stabilator: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.LeftStabilatorStr)
+			),
+			RightTail: new TailNodeSet(
+				Elevator: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightElevatorStr),
+				Rudder: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightRudderStr),
+				Stabilator: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RightStabilatorStr)),
+			DorsalTail: new TailNodeSet(
+				Elevator: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.ElevatorStr),
+				Rudder: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.RudderStr),
+				Stabilator: gRoot.GetNode<Node3D>(Consts.PlaneGeoAddr.StabilatorStr)
+			)
+		);
+	}
+
+	/// <summary>
+	/// This sets the initial basis set after initialization of the nodes for rotating the flight surfaces
+	/// </summary>
+	/// <exception cref="ArgumentNullException"></exception>
+	void SetInitialBasisSet()
+	{
+		if (FlightSurfaceNodes == null)
+			throw new ArgumentNullException(nameof(FlightSurfaceNodes), "FSNodes is null");
+		InitialBasisSet = new InitialBasisSet(
+			LeftWing: new WingBasisSet(
+				Aileron: FlightSurfaceNodes.LeftWing.Aileron?.Transform.Basis,
+				Flaps: FlightSurfaceNodes.LeftWing.Flaps?.Transform.Basis,
+				InnerSpoiler: FlightSurfaceNodes.LeftWing.InnerSpoiler?.Transform.Basis,
+				MiddleSpoiler: FlightSurfaceNodes.LeftWing.MiddleSpoiler?.Transform.Basis,
+				OuterSpoiler: FlightSurfaceNodes.LeftWing.OuterSpoiler?.Transform.Basis),
+			RightWing: new WingBasisSet(
+				Aileron: FlightSurfaceNodes.RightWing.Aileron?.Transform.Basis,
+				Flaps: FlightSurfaceNodes.RightWing.Flaps?.Transform.Basis,
+				InnerSpoiler: FlightSurfaceNodes.RightWing.InnerSpoiler?.Transform.Basis,
+				MiddleSpoiler: FlightSurfaceNodes.RightWing.MiddleSpoiler?.Transform.Basis,
+				OuterSpoiler: FlightSurfaceNodes.RightWing.OuterSpoiler?.Transform.Basis),
+			LeftTail: new TailBasisSet(
+				Elevator: FlightSurfaceNodes.LeftTail.Elevator?.Transform.Basis,
+				Rudder: FlightSurfaceNodes.LeftTail.Rudder?.Transform.Basis,
+				Stabilator: FlightSurfaceNodes.LeftTail.Stabilator?.Transform.Basis),
+			RightTail: new TailBasisSet(
+				Elevator: FlightSurfaceNodes.RightTail.Elevator?.Transform.Basis,
+				Rudder: FlightSurfaceNodes.RightTail.Rudder?.Transform.Basis,
+				Stabilator: FlightSurfaceNodes.RightTail.Stabilator?.Transform.Basis),
+			DorsalTail: new TailBasisSet(
+				Elevator: FlightSurfaceNodes.DorsalTail.Elevator?.Transform.Basis,
+				Rudder: FlightSurfaceNodes.DorsalTail.Rudder?.Transform.Basis,
+				Stabilator: FlightSurfaceNodes.DorsalTail.Stabilator?.Transform.Basis)
+		);
+	}
+
+	private void InitializedInputAngles()
+	{
+
+	}
+
+	public override void _Ready()
+	{
+		base._Ready();
+		try
+		{
+			SetFSNodes();
+			SetInitialBasisSet();
+		}
+		catch (ArgumentNullException e)
+		{
+			GD.PrintErr($"{e.Message}");
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr($"Error getting nodes: {e}");
+		}
+	}
+
+
 	public void SetInputValues(Inputs inputValues)
 	{
-		CtrlInputs = inputValues;
+		ControlInputs = inputValues;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -69,28 +180,73 @@ public abstract partial class Plane : CharacterBody3D
 		EmitSignal(SignalName.VelocityChanged, Velocity.Length());
 	}
 
-	protected abstract void MoveFlightSurfaces();
+	protected virtual void MoveFlightSurfaces()
+	{
+		MoveRollSurfaces();
+		MoveYawSurfaces();
+		MovePitchSurfaces();
+		MoveVectoringSurfaces();
+	}
+
+	protected virtual void MoveRollSurfaces()
+	{
+		if (ControlInputs == null || FlightSurfaceNodes == null)
+			return;
+
+		Basis rollBasis = new Basis(Vector3.Forward, Mathf.DegToRad(rollInput));
+
+		if (Util.IsAlive(FlightSurfaceNodes.LeftTail.Stabilator))
+			leftStabilator.Transform = new Transform3D(InitialBasisSet.LeftStabilatorRestBasis * rollBasis, leftStabilator.Transform.Origin);
+
+		if (Util.IsAlive(rightStabilator))
+			rightStabilator.Transform = new Transform3D(_rightStabilatorRestBasis * rollBasis, rightStabilator.Transform.Origin);
+	}
+
+	protected virtual void MoveYawSurfaces()
+	{
+		if (Util.IsAlive(leftRudder) && Util.IsAlive(rightRudder) && ControlInputs != null)
+		{
+			Basis yawBasis = new Basis(Vector3.Up, yawRad);
+			leftRudder.Transform = new Transform3D(_leftRudderRestBasis * yawBasis, leftRudder.Transform.Origin);
+			rightRudder.Transform = new Transform3D(_rightRudderRestBasis * yawBasis, rightRudder.Transform.Origin);
+		}
+	}
+
+	protected virtual void MovePitchSurfaces()
+	{
+		if (Util.IsAlive(leftFlap) && Util.IsAlive(rightFlap) && ControlInputs != null)
+		{
+			Basis pitchBasis = new Basis(Vector3.Right, Mathf.DegToRad(pitchInput));
+			leftFlap.Transform = new Transform3D(_leftFlapRestBasis * pitchBasis, leftFlap.Transform.Origin);
+			rightFlap.Transform = new Transform3D(_rightFlapRestBasis * pitchBasis, rightFlap.Transform.Origin);
+		}
+	}
+
+	protected virtual void MoveVectoringSurfaces()
+	{
+
+	}
 
 	private void UpdateFlightModel(double delta)
 	{
-		if (CtrlInputs != null)
+		if (ControlInputs != null)
 		{
-			RotateObjectLocal(Vector3.Right, (float)(PitchSensitivity * CtrlInputs.PitchAxis * delta));
-			RotateObjectLocal(Vector3.Forward, (float)(RollSensitivity * CtrlInputs.RollAxis * delta));
-			RotateObjectLocal(Vector3.Up, (float)(YawSensitivity * CtrlInputs.YawAxis * delta));
+			RotateObjectLocal(Vector3.Right, (float)(PitchSensitivity * ControlInputs.PitchAxis * delta));
+			RotateObjectLocal(Vector3.Forward, (float)(RollSensitivity * ControlInputs.RollAxis * delta));
+			RotateObjectLocal(Vector3.Up, (float)(YawSensitivity * ControlInputs.YawAxis * delta));
 		}
 
-		if (CtrlInputs != null && CtrlInputs.ThrottleAxis != 0)
+		if (ControlInputs != null && ControlInputs.ThrottleAxis != 0)
 		{
-			ThrottlePercent += CtrlInputs.ThrottleAxis * ThrottleSensitivity;
+			ThrottlePercent += ControlInputs.ThrottleAxis * ThrottleSensitivity;
 			ThrottlePercent = Math.Clamp(ThrottlePercent, -100f, 100f);
 			EmitSignal(SignalName.ThrottleChanged, ThrottlePercent);
 		} // TODO: NEON-21 should be placed into helper function and unified with other thrust axes
 
-		if (CtrlInputs != null)
+		if (ControlInputs != null)
 		{
-			LateralThrustPercent = CtrlInputs.StrafeLRAxis;
-			VerticalThrustPercent = CtrlInputs.StrafeUDAxis;
+			LateralThrustPercent = ControlInputs.StrafeLRAxis;
+			VerticalThrustPercent = ControlInputs.StrafeUDAxis;
 		}
 
 		SetDrag();

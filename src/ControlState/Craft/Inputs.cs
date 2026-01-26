@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using FlightModel1.Enum;
 
 namespace FlightModel1.ControlState.Craft;
 
