@@ -15,6 +15,7 @@ public abstract partial class Plane : CharacterBody3D
 {
 	#region Exports
 	[ExportCategory("Plane Stats")]
+	[ExportGroup("Throttle")]
 	[Export]
 	public float ThrottlePercent { get; set; } = 0.0f;
 
@@ -25,6 +26,13 @@ public abstract partial class Plane : CharacterBody3D
 	public float ThrottleSensitivity { get; set; } = 0.5f;
 
 	[Export]
+	public float Thrust { get; set; } = 40f;
+
+	[Export]
+	public float MaxSpeed { get; set; } = 800f;
+
+	[ExportGroup("Manuevering")]
+	[Export]
 	public float YawSensitivity { get; set; } = 1.0f;
 
 	[Export]
@@ -33,28 +41,52 @@ public abstract partial class Plane : CharacterBody3D
 	[Export]
 	public float PitchSensitivity { get; set; } = 1.0f;
 
-	[Export]
-	public float Thrust { get; set; } = 40f;
-
-	[Export]
-	public float MaxSpeed { get; set; } = 800f;
-
 	[ExportCategory("Surface Limits")]
+	[ExportGroup("Wing Surfaces")]
 	[Export]
-	public float MaxRollStabilatorAngle { get; set; } = 15f;
-
+	public float MaxAileronAngle { get; set; } = 30f;
 	[Export]
-	public float MaxPitchStabilatorAngle { get; set; } = 15f;
-
+	public float MinAileronAngle { get; set; } = -30f;
+	[Export]
+	public float MaxFlapsAngle { get; set; } = 30f;
+	[Export]
+	public float MinFlapsAngle { get; set; } = -30f;
+	[Export]
+	public float MaxInnerSpoilerAngle { get; set; } = 30f;
+	[Export]
+	public float MinInnerSpoilerAngle { get; set; } = -30f;
+	[Export]
+	public float MaxMiddleSpoilerAngle { get; set; } = 30f;
+	[Export]
+	public float MinMiddleSpoilerAngle { get; set; } = -30f;
+	[Export]
+	public float MaxOuterSpoilerAngle { get; set; } = 30f;
+	[Export]
+	public float MinOuterSpoilerAngle { get; set; } = -30f;
+	[Export]
+	public float MaxPivotAngle { get; set; } = 30f;
+	[Export]
+	public float MinPivotAngle { get; set; } = -30f;
+	[ExportGroup("Tail Surfaces")]
+	[Export]
+	public float MaxElevatorAngle { get; set; } = 30f;
+	[Export]
+	public float MinElevatorAngle { get; set; } = -30f;
 	[Export]
 	public float MaxRudderAngle { get; set; } = 30f;
-
 	[Export]
-	float MaxPitchSpoilerAngle { get; set; } = 25f;
+	public float MinRudderAngle { get; set; } = 30f;
+	[Export]
+	public float MaxRollStabilatorAngle { get; set; } = 30f;
+	[Export]
+	public float MinRollStabilatorAngle { get; set; } = -30f;
+	[Export]
+	public float MaxPitchStabilatorAngle { get; set; } = 30f;
+	[Export]
+	public float MinPitchStabilatorAngle { get; set; } = -30f;
 	#endregion Exports
 
 	protected Inputs? ControlInputs { get; set; } = null;
-	protected InputAngles InputAngleValues { get; set; } = new();
 	protected IEnumerable<Node3D> LiftSurfaces { get; set; } = Array.Empty<Node3D>();
 	protected float LateralThrustPercent { get; set; } = 0f;
 	protected float VerticalThrustPercent { get; set; } = 0f;
@@ -62,6 +94,7 @@ public abstract partial class Plane : CharacterBody3D
 	#region Model Node References
 	protected InitialBasisSet? InitialBasisSet;
 	protected FlightSurfaceNodeSet? FlightSurfaceNodes;
+	protected InputAngleLimits? InputAngleLimits;
 	#endregion
 
 	protected Node3D? gRoot = null;
@@ -144,9 +177,44 @@ public abstract partial class Plane : CharacterBody3D
 		);
 	}
 
-	private void InitializedInputAngles()
+	private void InitializeInputAngleLimits()
 	{
-
+		InputAngleLimits = new InputAngleLimits(
+			leftWing: new WingAngleSet(
+				aileron: new(MaxAileronAngle, MinAileronAngle),
+				flaps: new(MaxFlapsAngle, MinFlapsAngle),
+				innerSpoiler: new(MaxInnerSpoilerAngle, MinInnerSpoilerAngle),
+				middleSpoiler: new(MaxMiddleSpoilerAngle, MinMiddleSpoilerAngle),
+				outerSpoiler: new(MaxOuterSpoilerAngle, MinOuterSpoilerAngle),
+				pivot: new(MaxPivotAngle, MinPivotAngle)
+			),
+			rightWing: new WingAngleSet(
+				aileron: new(MaxAileronAngle, MinAileronAngle),
+				flaps: new(MaxFlapsAngle, MinFlapsAngle),
+				innerSpoiler: new(MaxInnerSpoilerAngle, MinInnerSpoilerAngle),
+				middleSpoiler: new(MaxMiddleSpoilerAngle, MinMiddleSpoilerAngle),
+				outerSpoiler: new(MaxOuterSpoilerAngle, MinOuterSpoilerAngle),
+				pivot: new(MaxPivotAngle, MinPivotAngle)
+			),
+			leftTail: new TailAngleSet(
+				elevator: new(MaxElevatorAngle, MinElevatorAngle),
+				rudder: new(MaxRudderAngle, MinRudderAngle),
+				pitchStabilator: new(MaxRollStabilatorAngle, MinRollStabilatorAngle),
+				rollStabilator: new(MaxRollStabilatorAngle, MinRollStabilatorAngle)
+			),
+			rightTail: new TailAngleSet(
+				elevator: new(MaxElevatorAngle, MinElevatorAngle),
+				rudder: new(MaxRudderAngle, MinRudderAngle),
+				pitchStabilator: new(MaxRollStabilatorAngle, MinRollStabilatorAngle),
+				rollStabilator: new(MaxRollStabilatorAngle, MinRollStabilatorAngle)
+			),
+			dorsalTail: new TailAngleSet(
+				elevator: new(MaxElevatorAngle, MinElevatorAngle),
+				rudder: new(MaxRudderAngle, MinRudderAngle),
+				pitchStabilator: new(MaxRollStabilatorAngle, MinRollStabilatorAngle),
+				rollStabilator: new(MaxRollStabilatorAngle, MinRollStabilatorAngle)
+			)
+		);
 	}
 
 	public override void _Ready()
@@ -156,6 +224,7 @@ public abstract partial class Plane : CharacterBody3D
 		{
 			SetFSNodes();
 			SetInitialBasisSet();
+			InitializeInputAngleLimits();
 		}
 		catch (ArgumentNullException e)
 		{
@@ -166,7 +235,6 @@ public abstract partial class Plane : CharacterBody3D
 			GD.PrintErr($"Error getting nodes: {e}");
 		}
 	}
-
 
 	public void SetInputValues(Inputs inputValues)
 	{
@@ -191,38 +259,59 @@ public abstract partial class Plane : CharacterBody3D
 		MoveVectoringSurfaces();
 	}
 
-	protected virtual void MoveRollSurfaces()
+	private void CheckRotateByBasis(
+		Node3D? flightSurfaceNode,
+		Basis? initialBasis,
+		MaximumMinimumDegreeAngles rotationLimit,
+		float axisInput,
+		Vector3? rotationAxis = null)
 	{
-		if (ControlInputs == null || FlightSurfaceNodes == null)
+		if (!Util.IsAlive(flightSurfaceNode) || initialBasis == null)
 			return;
 
-		Basis rollBasis = new Basis(Vector3.Forward, Mathf.DegToRad(rollInput));
+		rotationAxis ??= Vector3.Up;
+		Basis newBasis = new Basis(rotationAxis.Value, Mathf.DegToRad(rotationLimit.FindLinearValueAlongAxis(axisInput)));
+		flightSurfaceNode.Transform = new Transform3D(initialBasis.Value * newBasis, flightSurfaceNode.Transform.Origin);
+	}
 
-		if (Util.IsAlive(FlightSurfaceNodes.LeftTail.Stabilator))
-			leftStabilator.Transform = new Transform3D(InitialBasisSet.LeftStabilatorRestBasis * rollBasis, leftStabilator.Transform.Origin);
+	protected virtual void MoveRollSurfaces()
+	{
+		if (ControlInputs == null || FlightSurfaceNodes == null || InitialBasisSet == null || InputAngleLimits == null)
+			return;
 
-		if (Util.IsAlive(rightStabilator))
-			rightStabilator.Transform = new Transform3D(_rightStabilatorRestBasis * rollBasis, rightStabilator.Transform.Origin);
+		CheckRotateByBasis(
+			FlightSurfaceNodes.LeftWing.Aileron,
+			InitialBasisSet.LeftWing.Aileron,
+			InputAngleLimits.LeftWing.Aileron,
+			ControlInputs.RollAxis,
+			Vector3.Left);
+		CheckRotateByBasis(
+			FlightSurfaceNodes.RightWing.Aileron,
+			InitialBasisSet.RightWing.Aileron,
+			InputAngleLimits.RightWing.Aileron,
+			ControlInputs.RollAxis,
+			Vector3.Right);
+		CheckRotateByBasis(
+			FlightSurfaceNodes.LeftTail.Stabilator,
+			InitialBasisSet.LeftTail.Stabilator,
+			InputAngleLimits.LeftTail.RollStabilator,
+			ControlInputs.RollAxis,
+			Vector3.Left);
+		CheckRotateByBasis(
+			FlightSurfaceNodes.RightTail.Stabilator,
+			InitialBasisSet.RightTail.Stabilator,
+			InputAngleLimits.RightTail.RollStabilator,
+			ControlInputs.RollAxis,
+			Vector3.Right);
+
 	}
 
 	protected virtual void MoveYawSurfaces()
 	{
-		if (Util.IsAlive(leftRudder) && Util.IsAlive(rightRudder) && ControlInputs != null)
-		{
-			Basis yawBasis = new Basis(Vector3.Up, yawRad);
-			leftRudder.Transform = new Transform3D(_leftRudderRestBasis * yawBasis, leftRudder.Transform.Origin);
-			rightRudder.Transform = new Transform3D(_rightRudderRestBasis * yawBasis, rightRudder.Transform.Origin);
-		}
 	}
 
 	protected virtual void MovePitchSurfaces()
 	{
-		if (Util.IsAlive(leftFlap) && Util.IsAlive(rightFlap) && ControlInputs != null)
-		{
-			Basis pitchBasis = new Basis(Vector3.Right, Mathf.DegToRad(pitchInput));
-			leftFlap.Transform = new Transform3D(_leftFlapRestBasis * pitchBasis, leftFlap.Transform.Origin);
-			rightFlap.Transform = new Transform3D(_rightFlapRestBasis * pitchBasis, rightFlap.Transform.Origin);
-		}
 	}
 
 	protected virtual void MoveVectoringSurfaces()

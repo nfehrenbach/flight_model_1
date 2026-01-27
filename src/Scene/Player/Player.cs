@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using FlightModel1.ControlState;
+using FlightModel1.ControlState.UserActions;
 using FlightModel1.ControlState.Craft;
 using FlightModel1.Utils;
 using FlightModel1.Scene.Craft;

@@ -1,4 +1,6 @@
 
+using FlightModel1.ControlState.UserActions;
+
 namespace FlightModel1.ControlState;
 // TODO: NEON-23 may need a refactor
 public record UserInputs(
